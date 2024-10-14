@@ -171,7 +171,8 @@
       "runOnArm64Mac": "Run on ARM64 Mac",
       "devnetDeployment": "Devnet Deployment",
       "productionDeployment": "Production Deployment",
-      "digitalOcean": "Digital Ocean & ERC20 Gas Token Testnet"
+      "digitalOcean": "Digital Ocean & ERC20 Gas Token Testnet",
+      "awsDeploy": "Amazon Web Services Deployment not use an alt-gas token"
     }
   },
   "footer": {
