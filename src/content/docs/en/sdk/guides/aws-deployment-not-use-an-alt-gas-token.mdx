@@ -206,7 +206,7 @@ storageclass.storage.k8s.io/gp2 patched
 ```
 <ClickToZoom src={set_default_storageclass} alt="set-default-storageclass" /> 
 
-#### 7. Deploy Scroll SDK
+{/* #### 7. Deploy Scroll SDK
 ```
 git clone git@github.com:scroll-tech/scroll-sdk.git
 cd devent
@@ -230,7 +230,7 @@ To delete the cluster and avoid unnecessary costs:
 ```
 eksctl delete cluster --name scroll-sdk-minimal --region us-east-1
 ```
-#### 9. https config
+#### 9. https config */}
 
 
 ### Installing Marketplace Add-Ons
@@ -430,7 +430,7 @@ Run `scrollsdk setup db-init`, select "yes" to Blockexplorer, "no" to L1 Explore
 
 Now, input the information from the VPC Network panel, which is how pods will connect to the database from inside the virtual private network.
 
-<ClickToZoom src={DOVPCNetwork} alt="Digital Ocean VPC Network Information" />
+{/* <ClickToZoom src={DOVPCNetwork} alt="Digital Ocean VPC Network Information" /> */}
 
 Next, follow the prompts to create the new database users and passwords.
 
@@ -438,7 +438,7 @@ When prompted "Do you want to connect to a different database cluster for this d
 
 Lastly, when asked "Do you want to update the config.toml file with the new DSNs?" select "yes" to update your config.
 
-### Dealing with Connections & Connection Pools
+### Dealing with Connections & Connection Pools (TODO)
 
 DigitalOcean limits the number of incoming connections and we'll quickly reach this limitation for the basic cluster we've deployed. We'll setup "Connection Pools" so that services can leave their connections open, but share the "bandwidth" of number of active db transactions.
 
