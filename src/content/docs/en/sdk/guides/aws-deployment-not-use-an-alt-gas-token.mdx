@@ -47,6 +47,10 @@ import aws_create_database4_0 from "./_images/aws_create_database4_0.png"
 import aws_create_database4_1 from "./_images/aws_create_database4_1.png"
 import aws_create_database5 from "./_images/aws_create_database5.png"
 import aws_connection_info from "./_images/aws_connection_info.png"
+import push_secrets1 from "./_images/push_secrets1.png"
+import push_secrets2 from "./_images/push_secrets2.png"
+import push_secrets3 from "./_images/push_secrets3.png"
+import push_secrets4 from "./_images/push_secrets4.png"
 
 This guide documents getting a Scroll SDK deployment working on AWS's (Amazon Web Services) Kubernetes and managed databases, using Cloudflare for DNS.
 
@@ -489,51 +493,24 @@ You will be prompted with each update, and even flagged for empty values. Be sur
 
 ### Push Secrets
 
-Lastly, we need to take the configuration values that are sensitive and publish them to wherever we're deploying "secrets."
+Lastly, we need to take the configuration values that are sensitive and publish them to wherever we're deploying "secrets". AWS provides a Secret Management tool. To allow your cluster to access it, you need to configure some permissions.
 
-Since DigitalOcean doesn't natively host a Secret Management tool like AWS or Azure, we'll use Hashicorp Vault to store our sensitive data like database connection strings and private keys.
+1.  Find your cluster on the AWS webpage
 
-For the purposes of this demo, we will not host an independent version of Hashicorp vault, but instead launch a service in our cluster, and push values to this vault. Then, items from the store are made available to pods using [External Secrets](https://external-secrets.io/latest/).
+     https://us-east-1.console.aws.amazon.com/eks/home?region=us-east-1#/clusters
+2. Click your cluster name→Click **Compute**
+3. Now you can see node groups, in this sample, **standard-workers**
+<ClickToZoom src={push_secrets1} alt="" /> 
+4. click group name **standard-workers**.
+5. In **Details** tab, click **View in IAM**
+<ClickToZoom src={push_secrets2} alt="" /> 
+6. Click **Add permissions** -> **Attach policies**
+<ClickToZoom src={push_secrets3} alt="" /> 
+7. Type "secretsmanager" in the search box, and you will see `SecretsManagerReadWrite`, check the box next to it.
+8. Then click button **Add Permissions.**
+<ClickToZoom src={push_secrets4} alt="" /> 
 
-First, let's setup a local development setup of Hashicorp Vault.
-
-```bash
-helm repo add hashicorp https://helm.releases.hashicorp.com
-helm repo update
-helm install vault hashicorp/vault --set "server.dev.enabled=true"
-```
-
-Next, we'll create a secret to store our access token and a SecretStore — copy paste the following text to `vault-secret-store.yaml`
-
-```bash
-apiVersion: external-secrets.io/v1beta1
-kind: SecretStore
-metadata:
-  name: vault-backend
-spec:
-  provider:
-    vault:
-      server: "http://vault.default.svc.cluster.local:8200"
-      path: "scroll"
-      version: "v2"
-      auth:
-        tokenSecretRef:
-          name: vault-token
-          key: token
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: vault-token
-type: Opaque
-stringData:
-  token: "root"  # This is the default token in dev mode. Don't use in production!
-```
-
-Now, run `kubectl apply -f ./vault-secret-store.yaml`
-
-Next, run `scrollsdk setup push-secrets` and select "Hashicorp Vault - Dev". If you need guidance with another Secret Provider, please reach out.
-
+Next, run `scrollsdk setup push-secrets` and select `AWS`. 
 You'll be asked to update your `production.yaml` files, and we'll be ready to deploy!
 
 ### Enable TLS & HTTPS
